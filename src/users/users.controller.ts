@@ -3,7 +3,9 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { Public } from 'src/decorators/public';
+import { Public } from 'src/decorators/public.decorator';
+import { Roles } from 'src/decorators/role.decorator';
+import { Role } from 'src/enums/role.enum';
 
 @ApiBearerAuth()
 @Controller('users')
@@ -31,6 +33,7 @@ export class UsersController {
     return this.usersService.update(+id, updateUserDto);
   }
 
+  @Roles(Role.Admin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
