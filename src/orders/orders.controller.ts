@@ -50,4 +50,11 @@ export class OrdersController {
         return this.ordersService.remove(+id);
     }
 
+    // get orders of a delivery
+    @Roles(Role.Deliverer, Role.Admin)
+    @Get('delivery/:id')
+    getOrders(@Param('id') id: string) {
+        return this.ordersService.getOrdersOfDelivery(+id);
+    }
+
 }

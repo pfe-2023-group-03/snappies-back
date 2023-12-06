@@ -14,11 +14,11 @@ export class Order {
 
     @ManyToOne(() => Client)
     @JoinColumn({ name: "clientId" })
-    clientId: Client;
+    client: Client;
 
     @ManyToOne(() => Delivery)
     @JoinColumn({ name: "deliveryId" })
-    delivererId: Delivery;
+    delivery: Delivery;
 
     @Column({ nullable: false , default: orderState.Delivery})
     state: orderState;
