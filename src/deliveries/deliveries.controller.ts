@@ -48,4 +48,9 @@ export class DeliveriesController {
 
 
     // get number of box for a delivery
+    @Roles(Role.Deliverer, Role.Admin)
+    @Get(':id/box')
+    getNumberOfBox(@Param('id') id: string) {
+        return this.deliveriesService.getNumberOfBox(+id);
+    }
 }
