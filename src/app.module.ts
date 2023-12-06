@@ -11,6 +11,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './guards/role.guard';
 import { ClientsModule } from './client/clients.module';
 import { OrdersModule } from './orders/orders.module';
+import { DeliveriesModule } from './deliveries/deliveries.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { OrdersModule } from './orders/orders.module';
     UsersModule,
     ClientsModule,
     OrdersModule,
+    DeliveriesModule,
   ],
   controllers: [AppController],
   providers: [
