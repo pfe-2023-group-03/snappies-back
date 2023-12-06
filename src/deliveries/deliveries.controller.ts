@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/commo
 import { DeliveriesService } from './deliveries.service';
 import { CreateDeliveryDto } from './dto/create-delivery.dto';
 import { UpdateDeliveryDto } from './dto/update-delivery.dto';
-import { Public } from 'src/decorators/public.decorator';
 import { Role } from 'src/enums/role.enum';
 import { Roles } from 'src/decorators/role.decorator';
 

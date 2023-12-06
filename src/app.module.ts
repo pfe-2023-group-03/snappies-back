@@ -12,6 +12,7 @@ import { RolesGuard } from './guards/role.guard';
 import { ClientsModule } from './client/clients.module';
 import { OrdersModule } from './orders/orders.module';
 import { DeliveriesModule } from './deliveries/deliveries.module';
+import { ArticlesModule } from './articles/articles.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { DeliveriesModule } from './deliveries/deliveries.module';
     ClientsModule,
     OrdersModule,
     DeliveriesModule,
+    ArticlesModule,
   ],
   controllers: [AppController],
   providers: [
