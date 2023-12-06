@@ -1,4 +1,5 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { OrderDetail } from "../../order-details/entites/orderDetail.entity";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()
@@ -10,4 +11,6 @@ export class Article {
     @Column({nullable: false})
     label: string;
 
+    @OneToMany(() => OrderDetail, orderDetail => orderDetail.article)
+    orderDetails: OrderDetail[];
 }
