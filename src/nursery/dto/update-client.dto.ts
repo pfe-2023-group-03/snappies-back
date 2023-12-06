@@ -1,9 +1,9 @@
 import { PartialType } from "@nestjs/swagger";
-import { CreateNurseryDto } from "./create-nursery.dto";
+import { CreateClientDto } from "./create-client.dto";
 import { ApiProperty } from '@nestjs/swagger';
 
 
-export class UpdateNurseryDto extends PartialType(CreateNurseryDto) {
+export class UpdateClientyDto extends PartialType(CreateClientDto) {
 
     @ApiProperty()
     number: number;

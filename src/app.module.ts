@@ -9,7 +9,7 @@ import { UsersModule } from './users/users.module';
 import { AuthGuard } from './guards/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './guards/role.guard';
-import { NurseriesModule } from './nursery/nurseries.module';
+import { NurseriesModule } from './nursery/clients.module';
 
 @Module({
   imports: [
