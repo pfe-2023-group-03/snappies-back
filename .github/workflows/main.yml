@@ -43,9 +43,13 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
+      - name: Tag Docker image
+        run: |
+          docker tag pfe-back ${{ secrets.DOCKER_USERNAME }}/pfe-back
+
       - name: Push Docker image to Docker Hub
         run: |
-          docker push pfe-back
+          docker push ${{ secrets.DOCKER_USERNAME }}/pfe-back
 
       - name: SSH into Oracle Docker VPS and deploy
         uses: appleboy/ssh-action@master
