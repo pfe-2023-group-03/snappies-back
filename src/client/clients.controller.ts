@@ -15,8 +15,8 @@ export class ClientsController {
 
     // find one by id
      @Get(':id')
-    findOne(id: number) {
-        return this.clientsService.findOne(id);
+    findOne(id: string) {
+        return this.clientsService.findOne(+id);
     }
 
     // create one
@@ -27,13 +27,13 @@ export class ClientsController {
 
     // update one by id
     @Patch(':id')
-    update(id: number, @Body() updateClientDto: UpdateClientDto) {
+    update(id: string, @Body() updateClientDto: UpdateClientDto) {
         return this.clientsService.update(+id, updateClientDto);
     }
 
     // delete one by id
     @Delete(':id')
-    remove(@Param('id') id: number) {
+    remove(@Param('id') id: string) {
         return this.clientsService.remove(+id);
     }
 
