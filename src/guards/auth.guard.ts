@@ -3,10 +3,12 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from 'src/decorators/public.decorator';
+import { UserWithoutPassword } from 'src/users/dto/no-password-user.dto';
+import { UsersService } from 'src/users/users.service';
   
 @Injectable()
 export class AuthGuard implements CanActivate {
-    constructor(private jwtService: JwtService, private reflector : Reflector) {}
+    constructor(private jwtService: JwtService, private reflector : Reflector, private userService: UsersService,) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -31,7 +33,22 @@ export class AuthGuard implements CanActivate {
                     secret: process.env.JWT_SECRET,
                 }
             );
-            request['user'] = payload;
+
+            const user = await this.userService.findOneByEmail(payload['email']);
+
+            if (!user) {
+                throw new UnauthorizedException();
+            }
+
+            const userWithoutPassword: UserWithoutPassword = {
+                id: user.id,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                email: user.email,
+                role: user.role,
+            };
+
+            request['user'] = userWithoutPassword;
         } catch {
             throw new UnauthorizedException();
         }
