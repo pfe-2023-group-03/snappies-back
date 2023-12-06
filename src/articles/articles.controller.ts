@@ -12,24 +12,21 @@ export class ArticlesController {
     constructor(private readonly articlesService: ArticlesService) {}
 
     // find all articles
-    // @Roles(Role.Admin)
-    @Public()
+    @Roles(Role.Admin)
     @Get()
     findAll() {
         return this.articlesService.findAll();
     }
 
     // find one article by id
-    // @Roles(Role.Admin)
-    @Public()
+    @Roles(Role.Admin)
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.articlesService.findOne(+id);
     }
 
     // create an article
-    // @Roles(Role.Admin)
-    @Public()
+    @Roles(Role.Admin)
     @Post()
     create(@Body() createArticleDto: CreateArticleDto) {
         if(!createArticleDto) throw new BadRequestException('Article required');
@@ -37,8 +34,7 @@ export class ArticlesController {
     }
 
     // update an article
-    // @Roles(Role.Admin)
-    @Public()
+    @Roles(Role.Admin)
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateArticleDto: UpdateArticleDto) {
         if(!updateArticleDto) throw new BadRequestException('Article required');
@@ -46,8 +42,7 @@ export class ArticlesController {
     }
 
     // delete an article
-    // @Roles(Role.Admin)
-    @Public()
+    @Roles(Role.Admin)
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.articlesService.remove(+id);
