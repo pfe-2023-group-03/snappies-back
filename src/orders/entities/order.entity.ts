@@ -1,7 +1,7 @@
 import { orderState } from "src/enums/orderState.enum";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Client } from "../../client/entities/client.entity";
-import { Deliverer } from "../../deliverer/entities/deliverer.entity";
+import { Delivery } from "../../deliveries/entities/delivery.entity";
 
 @Entity()
 export class Order {
@@ -16,9 +16,9 @@ export class Order {
     @JoinColumn({ name: "clientId" })
     clientId: Client;
 
-    @ManyToOne(() => Deliverer)
-    @JoinColumn({ name: "delivererId" })
-    delivererId: Deliverer;
+    @ManyToOne(() => Delivery)
+    @JoinColumn({ name: "deliveryId" })
+    delivererId: Delivery;
 
     @Column({ nullable: false })
     state: orderState;

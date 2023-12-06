@@ -3,7 +3,7 @@ import { CreateOrderDto } from "./create-order.dto";
 import { ApiProperty } from '@nestjs/swagger';
 import { orderState } from "src/enums/orderState.enum";
 import { Client } from "../../client/entities/client.entity";
-import { Deliverer } from "../../deliverer/entities/deliverer.entity";
+import { Delivery } from "../../deliveries/entities/delivery.entity";
 
 
 export class UpdateOrdertDto extends PartialType(CreateOrderDto) {
@@ -15,7 +15,7 @@ export class UpdateOrdertDto extends PartialType(CreateOrderDto) {
     clientId: Client;
 
     @ApiProperty()
-    delivererId: Deliverer;
+    deliveryId: Delivery;
 
     @ApiProperty()
     state: orderState;

@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { orderState } from "src/enums/orderState.enum";
 import { Client } from "../../client/entities/client.entity";
-import { Deliverer } from "../../deliverer/entities/deliverer.entity";
+import { Delivery } from "../../deliveries/entities/delivery.entity";
 
 export class CreateOrderDto {
 
@@ -12,7 +12,7 @@ export class CreateOrderDto {
     clientId: Client;
 
     @ApiProperty()
-    delivererId: Deliverer;
+    deliveryId: Delivery;
 
     @ApiProperty()
     state: orderState;
