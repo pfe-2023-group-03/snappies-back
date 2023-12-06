@@ -41,7 +41,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.DOCKER_USERNAME }}/getting-started --push .
+          docker buildx build --platform linux/arm64/v8 -t ${{ secrets.DOCKER_USERNAME }}/getting-started --push .
 
       - name: SSH into Oracle Docker VPS and deploy
         uses: appleboy/ssh-action@master
