@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Delivery } from './entities/delivery.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CreateDeliveryDto } from './dto/create-delivery.dto';
+import { UpdateDeliveryDto } from './dto/update-delivery.dto';
 
 
 @Injectable()
@@ -25,12 +27,28 @@ export class DeliveriesService {
     }
 
     // create a delivery
-    
+    create(createDeliveryDto: CreateDeliveryDto){
+        return this.deliveryRepository.save(createDeliveryDto);
+    }
 
     // update a delivery
-    // delete a delivery
+    update(id: number, updateDeliveryDto: UpdateDeliveryDto){
+        return this.deliveryRepository.update(id, updateDeliveryDto);
+    }
 
+    // delete a delivery
+    delete(id: number){
+        return this.deliveryRepository.delete(id);
+    }
+    
     // get number of box for a delivery
+    getNumberOfBox(id: number){
+        const deliveryFind = this.findOne(id);
+        // find all orders for this delivery
+        // for each order, find the number of box
+        // return the sum of all number of box
+        
+    }
 
 
 }
