@@ -45,7 +45,16 @@ export class DeliveriesService {
     getNumberOfBox(id: number){
         const deliveryFind = this.findOne(id);
         // find all orders for this delivery
+        /* const orders = OrdersService.findAll() */
         // for each order, find the number of box
+        /* const sum */
+        /* const orderOfDelivery; */
+        /*foreach(const order in orders){
+            if(order.deliveryId == id){
+                orderOfDelivery.push(order);
+            }  
+        } */
+
         // return the sum of all number of box
         
     }
