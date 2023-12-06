@@ -26,7 +26,6 @@ export class OrdersController {
     }
 
     // create order
-    //@Roles(Role.Admin)
     @Roles(Role.Deliverer, Role.Admin)
     @Post()
     create(@Body() createOrderDto:CreateOrderDto) {
@@ -44,7 +43,6 @@ export class OrdersController {
 
     // delete order by id
     @Roles(Role.Admin)
-    @Public()
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.ordersService.remove(+id);
