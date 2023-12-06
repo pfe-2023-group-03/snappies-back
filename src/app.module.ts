@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
+import { NurseriesModule } from './nursery/nurseries.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { LoggerMiddleware } from './middlewares/logger.middleware';
       synchronize: true,
     }),
     UserModule,
+    NurseriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
