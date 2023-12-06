@@ -3,11 +3,11 @@ import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientyDto } from './dto/update-client.dto';
 
-@Controller('nurseries')
+@Controller('clients')
 export class ClientsController {
     constructor(private readonly clientsService: ClientsService) {}
 
-    // find all nurseries
+    // find all clients
     @Get()
     findAll() {
         return this.clientsService.findAll();

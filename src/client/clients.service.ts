@@ -13,7 +13,7 @@ export class ClientsService {
         private clientRepository : Repository<Client>,
     ) {}
 
-    // find all nurseries
+    // find all clients
     findAll() {
         return this.clientRepository.find();
     }
