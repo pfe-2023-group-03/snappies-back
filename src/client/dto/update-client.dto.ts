@@ -3,7 +3,7 @@ import { CreateClientDto } from "./create-client.dto";
 import { ApiProperty } from '@nestjs/swagger';
 
 
-export class UpdateClientyDto extends PartialType(CreateClientDto) {
+export class UpdateClientDto extends PartialType(CreateClientDto) {
 
     @ApiProperty()
     number: number;

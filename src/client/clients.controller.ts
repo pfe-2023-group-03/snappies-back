@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
-import { UpdateClientyDto } from './dto/update-client.dto';
+import { UpdateClientDto } from './dto/update-client.dto';
 
 @Controller('clients')
 export class ClientsController {
@@ -27,7 +27,7 @@ export class ClientsController {
 
     // update one by id
     @Patch(':id')
-    update(id: number, @Body() updateClientDto: UpdateClientyDto) {
+    update(id: number, @Body() updateClientDto: UpdateClientDto) {
         return this.clientsService.update(+id, updateClientDto);
     }
 
