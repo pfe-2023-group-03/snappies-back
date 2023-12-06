@@ -37,7 +37,7 @@ export class DeliveriesService {
     }
 
     // delete a delivery
-    delete(id: number){
+    remove(id: number){
         return this.deliveryRepository.delete(id);
     }
     

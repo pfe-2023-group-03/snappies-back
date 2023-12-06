@@ -20,6 +20,6 @@ export class Order {
     @JoinColumn({ name: "deliveryId" })
     delivererId: Delivery;
 
-    @Column({ nullable: false })
+    @Column({ nullable: false , default: orderState.Delivery})
     state: orderState;
 }
