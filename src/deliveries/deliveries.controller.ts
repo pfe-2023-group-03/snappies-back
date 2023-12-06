@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { DeliveriesService } from './deliveries.service';
 import { CreateDeliveryDto } from './dto/create-delivery.dto';
 import { UpdateDeliveryDto } from './dto/update-delivery.dto';
@@ -28,6 +28,7 @@ export class DeliveriesController {
     @Roles(Role.Admin)
     @Post()
     create(@Body() createDeliveryDto: CreateDeliveryDto) {
+        if(!createDeliveryDto) throw new BadRequestException('Delivery required');
         return this.deliveriesService.create(createDeliveryDto);
     }
 
@@ -35,6 +36,7 @@ export class DeliveriesController {
     @Roles(Role.Admin)
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateDeliveryDto: UpdateDeliveryDto) {
+        if(!updateDeliveryDto) throw new BadRequestException('Delivery required');
         return this.deliveriesService.update(+id, updateDeliveryDto);
     }
 
