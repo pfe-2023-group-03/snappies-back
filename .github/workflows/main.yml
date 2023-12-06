@@ -58,9 +58,8 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            sudo su
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
-            docker pull pfe-back
-            docker stop pfe-back || true
-            docker rm pfe-back || true
-            docker run -d -p 3000:3000 --name pfe-back pfe-back
+            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
+            sudo docker pull pfe-back
+            sudo docker stop pfe-back || true
+            sudo docker rm pfe-back || true
+            sudo docker run -d -p 3000:3000 --name pfe-back pfe-back
