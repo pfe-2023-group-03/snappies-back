@@ -12,14 +12,14 @@ export class OrdersController {
     constructor(private readonly ordersService: OrdersService) {}
 
     //find all orders
-    @Public()
+    @Roles(Role.Deliverer, Role.Admin)
     @Get()
     findAll() {
         return this.ordersService.findAll();
     }
 
     // find one by id
-    @Public()
+    @Roles(Role.Deliverer, Role.Admin)
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.ordersService.findOne(+id);
@@ -27,14 +27,14 @@ export class OrdersController {
 
     // create order
     //@Roles(Role.Admin)
-    @Public()
+    @Roles(Role.Deliverer, Role.Admin)
     @Post()
     create(@Body() createOrderDto:CreateOrderDto) {
         return this.ordersService.create(createOrderDto);
     }
 
     // update order (change state) by id
-    @Public()
+    @Roles(Role.Deliverer, Role.Admin)
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateOrdertDto: UpdateOrdertDto) {
         return this.ordersService.update(+id, updateOrdertDto);

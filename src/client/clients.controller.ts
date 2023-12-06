@@ -18,7 +18,7 @@ export class ClientsController {
     }
 
     // find one by id
-    @Public()
+    @Roles(Role.Deliverer, Role.Admin)
     @Get(':id')
     findOne(id: string) {
         return this.clientsService.findOne(+id);

@@ -12,14 +12,14 @@ export class DeliveriesController {
     constructor(private readonly deliveriesService : DeliveriesService) {}
 
     // find all deliveries
-    @Public()
+    @Roles(Role.Deliverer, Role.Admin)
     @Get()
     findAll() {
         return this.deliveriesService.findAll();
     }
 
     // find one delivery by id
-    @Public()
+    @Roles(Role.Deliverer, Role.Admin)
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.deliveriesService.findOne(+id);
