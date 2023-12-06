@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
@@ -28,6 +28,7 @@ export class ClientsController {
     @Roles(Role.Admin)
     @Post()
     create(@Body() createclientDto: CreateClientDto) {
+        if(!createclientDto) throw new BadRequestException('Client required')
         return this.clientsService.create(createclientDto);
     }
 
@@ -35,6 +36,7 @@ export class ClientsController {
     @Roles(Role.Admin)
     @Patch(':id')
     update(id: string, @Body() updateClientDto: UpdateClientDto) {
+        if(!updateClientDto) throw new BadRequestException('Client required')
         return this.clientsService.update(+id, updateClientDto);
     }
 

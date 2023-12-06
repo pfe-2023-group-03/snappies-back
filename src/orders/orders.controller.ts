@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post  } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post  } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrdertDto } from './dto/update-order.dto';
@@ -30,6 +30,7 @@ export class OrdersController {
     @Roles(Role.Deliverer, Role.Admin)
     @Post()
     create(@Body() createOrderDto:CreateOrderDto) {
+        if(!createOrderDto) throw new BadRequestException('Order required');
         return this.ordersService.create(createOrderDto);
     }
 
@@ -37,6 +38,7 @@ export class OrdersController {
     @Roles(Role.Deliverer, Role.Admin)
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateOrdertDto: UpdateOrdertDto) {
+        if(!updateOrdertDto) throw new BadRequestException('Order required');
         return this.ordersService.update(+id, updateOrdertDto);
     }
 
