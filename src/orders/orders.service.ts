@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
@@ -36,6 +36,17 @@ export class OrdersService {
     // delete order by id
     remove(id: number) {
         return this.ordersRepository.delete(id);
+    }
+
+    // get orders of a delivery
+    getOrdersOfDelivery(id: number) {
+        const orders = this.ordersRepository.find({
+            where: {
+                delivery: { id },
+            },
+        });
+
+        return orders;
     }
 
 }

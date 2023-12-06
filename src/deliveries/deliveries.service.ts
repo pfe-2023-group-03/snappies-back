@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Delivery } from './entities/delivery.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -11,7 +11,7 @@ export class DeliveriesService {
 
     constructor(
         @InjectRepository(Delivery)
-        private deliveryRepository : Repository<Delivery>
+        private deliveryRepository : Repository<Delivery>,
     ) {}
 
     // find all deliveries
@@ -40,24 +40,5 @@ export class DeliveriesService {
     remove(id: number){
         return this.deliveryRepository.delete(id);
     }
-    
-    // get number of box for a delivery
-    getNumberOfBox(id: number){
-        const deliveryFind = this.findOne(id);
-        // find all orders for this delivery
-        /* const orders = OrdersService.findAll() */
-        // for each order, find the number of box
-        /* const sum */
-        /* const orderOfDelivery; */
-        /*foreach(const order in orders){
-            if(order.deliveryId == id){
-                orderOfDelivery.push(order);
-            }  
-        } */
-
-        // return the sum of all number of box
-        
-    }
-
 
 }
