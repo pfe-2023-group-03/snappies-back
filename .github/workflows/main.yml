@@ -57,4 +57,4 @@ jobs:
             docker pull pfe-back
             docker stop pfe-back || true
             docker rm pfe-back || true
-            docker run -d -p 80:80 --name pfe-back pfe-back
+            docker run -d -p 3000:3000 --name pfe-back pfe-back
