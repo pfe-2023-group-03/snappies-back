@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { Public } from 'src/decorators/public.decorator';
 import { Role } from 'src/enums/role.enum';
@@ -27,19 +27,12 @@ export class ArticlesController {
         return this.articlesService.findOne(+id);
     }
 
-    // find one article by label
-    // @Roles(Role.Admin)
-    @Public()
-    @Get(':label')
-    findOneByLabel(@Param('label') label: string) {
-        return this.articlesService.findOneByLabel(label);
-    }
-
     // create an article
     // @Roles(Role.Admin)
     @Public()
     @Post()
     create(@Body() createArticleDto: CreateArticleDto) {
+        if(!createArticleDto) throw new BadRequestException('Article required');
         return this.articlesService.create(createArticleDto);
     }
 
@@ -48,6 +41,7 @@ export class ArticlesController {
     @Public()
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateArticleDto: UpdateArticleDto) {
+        if(!updateArticleDto) throw new BadRequestException('Article required');
         return this.articlesService.update(+id, updateArticleDto);
     }
 
