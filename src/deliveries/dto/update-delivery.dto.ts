@@ -11,6 +11,4 @@ export class UpdateDeliveryDto extends PartialType(CreateDeliveryDto){
     @ApiProperty()
     title: string;
 
-    @ApiProperty()
-    day: Date;
 }

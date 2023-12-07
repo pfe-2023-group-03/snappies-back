@@ -19,9 +19,6 @@ export class Delivery {
     @Column({nullable: false})
     title: string;
 
-    @Column({nullable: false})
-    day: Date;
-
     @OneToMany(() => Order, order => order.delivery)
     orders: Order[];
 }

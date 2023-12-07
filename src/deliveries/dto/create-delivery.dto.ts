@@ -8,7 +8,4 @@ export class CreateDeliveryDto {
     
     @ApiProperty()
     title: string;
-
-    @ApiProperty()
-    day: Date;
 }
