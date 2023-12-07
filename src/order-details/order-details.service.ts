@@ -23,10 +23,11 @@ export class OrderDetailsService {
         });
     }
 
-    // create one orderDetail
-    create(orderDetail: OrderDetail) {
+    // add orderDetail to order
+    create(: ) {
         return this.articleRepository.save(orderDetail);
     }
+
 
 
 }
