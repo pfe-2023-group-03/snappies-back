@@ -8,4 +8,8 @@ export class CreateDeliveryDto {
     
     @ApiProperty()
     title: string;
+
+    @ApiProperty()
+    userId: number;
+    
 }

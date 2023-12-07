@@ -9,11 +9,11 @@ export class CreateOrderDto {
     number: string;
 
     @ApiProperty()
-    clientId: Client;
-
-    @ApiProperty()
-    deliveryId: Delivery;
-
-    @ApiProperty()
     state: orderState;
+
+    @ApiProperty()
+    clientId: number;
+
+    @ApiProperty()
+    deliveryId: number;
 }

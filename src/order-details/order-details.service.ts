@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderDetail } from './entites/orderDetail.entity';
-import { Repository } from 'typeorm';
+import { Repository, getManager } from 'typeorm';
 import { CreateOrderDetailDto } from './dto/create-orderDetail.dto';
 import { UpdateOrderDetailDto } from './dto/update-orderDetail.dto';
 
@@ -56,10 +56,15 @@ export class OrderDetailsService {
     }
 
     // get sum of all quantities of articles in an order
-    getSumQuantityOrder(orderId: number) {
-        return this.orderDetailRepository.createQueryBuilder('orderDetail')
-            .select('SUM(orderDetail.quantity)', 'sum')
-            .where('orderDetail.orderId = :orderId', { orderId })
-            .getRawOne();
-    }
+    async getSumQuantityOrder(orderId: number): Promise<number> {
+        const result = await getManager()
+          .createQueryBuilder()
+          .select('SUM(quantity)', 'sum')
+          .from(OrderDetail, 'orderDetail')
+          .where('orderDetail.orderId = :orderId', { orderId })
+          .getRawOne();
+    
+        return result.sum || 0;
+      }
+    
 }

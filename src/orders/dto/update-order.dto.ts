@@ -6,17 +6,4 @@ import { Client } from "../../client/entities/client.entity";
 import { Delivery } from "../../deliveries/entities/delivery.entity";
 
 
-export class UpdateOrdertDto extends PartialType(CreateOrderDto) {
-
-    @ApiProperty()
-    number: string;
-
-    @ApiProperty()
-    clientId: Client;
-
-    @ApiProperty()
-    deliveryId: Delivery;
-
-    @ApiProperty()
-    state: orderState;
-}
+export class UpdateOrdertDto extends PartialType(CreateOrderDto) {}
