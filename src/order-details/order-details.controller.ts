@@ -63,6 +63,7 @@ export class OrderDetailsController {
     @Get('quantityOfArticleOrder/:orderId/:articleId')
     getQuantityOfArticleOrder(@Param('orderId') orderId: string, @Param('articleId') articleId: string) {
         if(!orderId || !articleId) throw new BadRequestException('Order required or article required');
+        console.log('Before check - orderId:', orderId);
         return this.orderDetailsService.getQuantityOfArticleOrder(+orderId, +articleId);
     }
 
@@ -70,7 +71,9 @@ export class OrderDetailsController {
     @Roles(Role.Deliverer, Role.Admin)
     @Get('sumQuantityOrder/:orderId')
     getSumQuantityOrder(@Param('orderId') orderId: string) {
+        console.log('Before check - orderId:', orderId);
         if (!orderId) throw new BadRequestException('Order required');
         return this.orderDetailsService.getSumQuantityOrder(+orderId);
+
     }
 }
