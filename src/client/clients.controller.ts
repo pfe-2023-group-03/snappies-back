@@ -2,9 +2,10 @@ import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post 
 import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
-import { Public } from 'src/decorators/public.decorator';
 import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
+import { ApiBearerAuth } from '@nestjs/swagger';
+@ApiBearerAuth()
 
 @Controller('clients')
 export class ClientsController {

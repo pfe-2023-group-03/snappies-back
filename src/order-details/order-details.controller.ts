@@ -4,8 +4,9 @@ import { CreateOrderDetailDto } from './dto/create-orderDetail.dto';
 import { UpdateOrderDetailDto } from './dto/update-orderDetail.dto';
 import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
-import { get } from 'http';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('order-details')
 export class OrderDetailsController {
 
