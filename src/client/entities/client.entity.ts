@@ -8,7 +8,7 @@ export class Client {
     id: number;
 
     @Column({ unique: true, nullable: false})
-    number: number;
+    number: string;
 
     @Column({nullable: false})
     name: string;

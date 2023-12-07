@@ -11,7 +11,7 @@ export class Order {
     id: number;
 
     @Column({ nullable: false, unique: true })
-    number: number;
+    number: string;
 
     @ManyToOne(() => Client)
     @JoinColumn({ name: "clientId" })

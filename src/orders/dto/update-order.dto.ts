@@ -9,7 +9,7 @@ import { Delivery } from "../../deliveries/entities/delivery.entity";
 export class UpdateOrdertDto extends PartialType(CreateOrderDto) {
 
     @ApiProperty()
-    number: number;
+    number: string;
 
     @ApiProperty()
     clientId: Client;

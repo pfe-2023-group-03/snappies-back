@@ -6,7 +6,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class UpdateClientDto extends PartialType(CreateClientDto) {
 
     @ApiProperty()
-    number: number;
+    number: string;
 
     @ApiProperty()
     name: string;
