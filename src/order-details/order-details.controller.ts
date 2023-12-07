@@ -52,6 +52,7 @@ export class OrderDetailsController {
     }
 
     // get all orderDetails for an order
+    @Roles(Role.Deliverer,Role.Admin)
     @Get(':orderId')
     findByOrder(@Param('orderId') orderId: string) {
         if(!orderId) throw new BadRequestException('Order required');
@@ -64,16 +65,16 @@ export class OrderDetailsController {
     getQuantityOfArticleOrder(@Param('orderId') orderId: string, @Param('articleId') articleId: string) {
         if(!orderId || !articleId) throw new BadRequestException('Order required or article required');
         console.log('Before check - orderId:', orderId);
+        console.log('Before check - articleId:', articleId);
         return this.orderDetailsService.getQuantityOfArticleOrder(+orderId, +articleId);
     }
 
     // get sum of all quantities of articles in an order
-    @Roles(Role.Deliverer, Role.Admin)
-    @Get('sumQuantityOrder/:orderId')
-    getSumQuantityOrder(@Param('orderId') orderId: string) {
-        console.log('Before check - orderId:', orderId);
-        if (!orderId) throw new BadRequestException('Order required');
-        return this.orderDetailsService.getSumQuantityOrder(+orderId);
-
+    @Roles(Role.Deliverer,Role.Admin)
+    @Post('sumQuantityOfOrder/:orderId')
+    getSumQuantityOfOrder2(@Param('orderId') orderId: string) {
+        if(!orderId) throw new BadRequestException('Order required');
+        return this.orderDetailsService.getSumQuantityOfOrder(+orderId);
     }
+
 }

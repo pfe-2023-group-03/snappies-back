@@ -56,36 +56,14 @@ export class OrderDetailsService {
     }
 
     // get sum of all quantities of articles in an order
-    async getSumQuantityOrder(orderId: number){
-
-        const result = await this.orderDetailRepository
-          .createQueryBuilder()
-          .select('SUM(quantity)', 'sum')
-          .from(OrderDetail, 'orderDetail')
+    getSumQuantityOfOrder(orderId: number){
+        const result = this.orderDetailRepository
+          .createQueryBuilder('orderDetail')
+          .select('SUM(orderDetail.quantity)', 'sum')
           .where('orderDetail.orderId = :orderId', { orderId })
           .getRawOne();
     
-        return result.sum || 0;
-      }
-
-    // async getSumQuantityOrder(orderId: number): Promise<number> {
-    //     console.log('Before check - orderId:', orderId);
-    
-    //     if (isNaN(orderId) || orderId <= 0) {
-    //       throw new BadRequestException('Invalid orderId');
-    //     }
-    
-    //     console.log('After check - orderId:', orderId);
-    
-    //     const result = await this.orderDetailRepository.query(`
-    //       SELECT SUM(quantity) as sum
-    //       FROM order_detail
-    //       WHERE order_id = $1
-    //     `, [orderId]);
-    
-    //     console.log('Result:', result);
-    
-    //     return result[0].sum || 0;
-    //   }
+        return result || 0;
+    }
     
 }
