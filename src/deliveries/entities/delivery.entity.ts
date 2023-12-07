@@ -1,6 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { DeliveryState } from "src/enums/deliveryState.enum";
 import { User } from "src/users/entities/user.entity";
+import { Order } from "src/orders/entities/order.entity";
 
 @Entity()
 export class Delivery {
@@ -20,4 +21,7 @@ export class Delivery {
 
     @Column({nullable: false})
     day: Date;
+
+    @OneToMany(() => Order, order => order.delivery)
+    orders: Order[];
 }
