@@ -1,9 +1,10 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { OrderDetailsService } from './order-details.service';
 import { CreateOrderDetailDto } from './dto/create-orderDetail.dto';
 import { UpdateOrderDetailDto } from './dto/update-orderDetail.dto';
 import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
+import { get } from 'http';
 
 @Controller('order-details')
 export class OrderDetailsController {
@@ -13,48 +14,56 @@ export class OrderDetailsController {
 
     // get all orderDetails
     @Roles(Role.Deliverer,Role.Admin)
+    @Get()
     findAll() {
         return this.orderDetailsService.findAll();
     }
 
     // get one orderDetail by id
     @Roles(Role.Deliverer,Role.Admin)
-    findOne(orderId: number, articleId: number) {
+    @Get(':orderId/:articleId')
+    findOne(@Param('orderId') orderId: number, @Param('articleId') articleId: number) {
         return this.orderDetailsService.findOne(orderId, articleId);
     }
 
     // add orderDetail to order
     @Roles(Role.Deliverer,Role.Admin)
-    create( createOrderDetailDto : CreateOrderDetailDto ) {
+    @Post()
+    create(@Body() createOrderDetailDto : CreateOrderDetailDto ) {
         return this.orderDetailsService.create(createOrderDetailDto);
     }
 
     // update orderDetail
     @Roles(Role.Deliverer,Role.Admin)
-    update(orderId: number, articleId: number, updateOrderDetailDto : UpdateOrderDetailDto) {
+    @Patch(':orderId/:articleId')
+    update(@Param('orderId') orderId: number, @Param('articleId') articleId: number, @Body() updateOrderDetailDto : UpdateOrderDetailDto) {
         return this.orderDetailsService.update(orderId, articleId, updateOrderDetailDto);
     }
 
     // delete orderDetail
     @Roles(Role.Admin)
-    remove(orderId: number, articleId: number) {
+    @Delete(':orderId/:articleId')
+    remove(@Param('orderId') orderId: number, @Param('articleId') articleId: number) {
         return this.orderDetailsService.remove(orderId, articleId);
     }
 
     // get all orderDetails for an order
-    findByOrder(orderId: number) {
+    @Get(':orderId')
+    findByOrder(@Param('orderId') orderId: number) {
         return this.orderDetailsService.findByOrder(orderId);
     }
 
     // get quantity of an article in an order
     @Roles(Role.Deliverer,Role.Admin)
-    getQuantityOfArticleOrder(orderId: number, articleId: number) {
+    @Get('quantityOfArticleOrder/:orderId/:articleId')
+    getQuantityOfArticleOrder(@Param('orderId') orderId: number, @Param('articleId') articleId: number) {
         return this.orderDetailsService.getQuantityOfArticleOrder(orderId, articleId);
     }
 
     // get sum of all quantities of articles in an order
     @Roles(Role.Deliverer,Role.Admin)
-    getSumQuantityOrder(orderId: number) {
+    @Get('sumQuantityOrder/:orderId')
+    getSumQuantityOrder(@Param('orderId') orderId: number) {
         return this.orderDetailsService.getSumQuantityOrder(orderId);
     }
 
