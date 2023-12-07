@@ -67,11 +67,10 @@ export class OrderDetailsController {
     }
 
     // get sum of all quantities of articles in an order
-    @Roles(Role.Deliverer,Role.Admin)
+    @Roles(Role.Deliverer, Role.Admin)
     @Get('sumQuantityOrder/:orderId')
     getSumQuantityOrder(@Param('orderId') orderId: string) {
-        if(!orderId) throw new BadRequestException('Order required');
+        if (!orderId) throw new BadRequestException('Order required');
         return this.orderDetailsService.getSumQuantityOrder(+orderId);
     }
-
 }

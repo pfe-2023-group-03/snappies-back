@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderDetail } from './entites/orderDetail.entity';
 import { Repository, getManager } from 'typeorm';
@@ -56,8 +56,9 @@ export class OrderDetailsService {
     }
 
     // get sum of all quantities of articles in an order
-    async getSumQuantityOrder(orderId: number): Promise<number> {
-        const result = await getManager()
+    async getSumQuantityOrder(orderId: number){
+
+        const result = await this.orderDetailRepository
           .createQueryBuilder()
           .select('SUM(quantity)', 'sum')
           .from(OrderDetail, 'orderDetail')
@@ -66,5 +67,25 @@ export class OrderDetailsService {
     
         return result.sum || 0;
       }
+
+    // async getSumQuantityOrder(orderId: number): Promise<number> {
+    //     console.log('Before check - orderId:', orderId);
+    
+    //     if (isNaN(orderId) || orderId <= 0) {
+    //       throw new BadRequestException('Invalid orderId');
+    //     }
+    
+    //     console.log('After check - orderId:', orderId);
+    
+    //     const result = await this.orderDetailRepository.query(`
+    //       SELECT SUM(quantity) as sum
+    //       FROM order_detail
+    //       WHERE order_id = $1
+    //     `, [orderId]);
+    
+    //     console.log('Result:', result);
+    
+    //     return result[0].sum || 0;
+    //   }
     
 }
