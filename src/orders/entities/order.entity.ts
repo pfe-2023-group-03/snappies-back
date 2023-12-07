@@ -13,11 +13,17 @@ export class Order {
     @Column({ nullable: false, unique: true })
     number: string;
 
-    @ManyToOne(() => Client)
+    @Column({ nullable: false })
+    clientId: number;
+
+    @ManyToOne(() => Client, client => client.orders, { onDelete: 'CASCADE' })
     @JoinColumn({ name: "clientId" })
     client: Client;
 
-    @ManyToOne(() => Delivery)
+    @Column({ nullable: false })
+    deliveryId: number;
+
+    @ManyToOne(() => Delivery, delivery => delivery.orders, { onDelete: 'CASCADE' })
     @JoinColumn({ name: "deliveryId" })
     delivery: Delivery;
 

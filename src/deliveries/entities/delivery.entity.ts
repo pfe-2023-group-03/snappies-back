@@ -9,9 +9,12 @@ export class Delivery {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => User)
+    @Column({ nullable: false })
+    userId: number;
+
+    @ManyToOne(() => User, user => user.deliveries, { onDelete: 'CASCADE' })
     @JoinColumn({ name: "userId" })
-    userId: User;
+    user: User;
 
     @Column({ nullable: false, default: DeliveryState.Preparation })
     state: DeliveryState;
