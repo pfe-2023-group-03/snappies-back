@@ -1,8 +1,4 @@
 import { ApiProperty, PartialType } from "@nestjs/swagger";
 import { CreateArticleDto } from "./create-article.dto";
 
-export class UpdateArticleDto extends PartialType(CreateArticleDto) {
-
-    @ApiProperty()
-    label: string;
-}
+export class UpdateArticleDto extends PartialType(CreateArticleDto) {}

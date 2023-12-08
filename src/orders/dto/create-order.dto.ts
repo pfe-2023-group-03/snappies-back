@@ -6,14 +6,14 @@ import { Delivery } from "../../deliveries/entities/delivery.entity";
 export class CreateOrderDto {
 
     @ApiProperty()
-    number: number;
-
-    @ApiProperty()
-    clientId: Client;
-
-    @ApiProperty()
-    deliveryId: Delivery;
+    number: string;
 
     @ApiProperty()
     state: orderState;
+
+    @ApiProperty()
+    clientId: number;
+
+    @ApiProperty()
+    deliveryId: number;
 }

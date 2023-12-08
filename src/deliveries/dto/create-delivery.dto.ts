@@ -10,5 +10,6 @@ export class CreateDeliveryDto {
     title: string;
 
     @ApiProperty()
-    day: Date;
+    userId: number;
+    
 }
