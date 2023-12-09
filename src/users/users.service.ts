@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 
 import * as bcrypt from 'bcrypt';
+import { Role } from 'src/enums/role.enum';
 
 @Injectable()
 export class UsersService {
@@ -43,4 +44,7 @@ export class UsersService {
     });
   }
 
+  updateRole(id: number, role: Role) {
+    return this.usersRepository.update(id, { role });
+  }
 }

@@ -40,4 +40,11 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
+
+  @Roles(Role.Admin)
+  @Patch(':id/role')
+  updateRole(@Param('id') id: string, @Body() role: Role) {
+    if(!role) throw new BadRequestException('Role required');
+    return this.usersService.updateRole(+id, role);
+  }
 }
