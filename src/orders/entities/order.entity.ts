@@ -10,9 +10,6 @@ export class Order {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ nullable: false, unique: true })
-    number: string;
-
     @Column({ nullable: false })
     clientId: number;
 
