@@ -1,0 +1,65 @@
+### The application is running on port 3000 and you have an admin (id: 1) in the database.
+
+### Login
+# @name login
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+  "email": "admin@snappies.com",
+  "password": "password"
+}
+
+### Define token
+@token = {{login.response.body.access_token}}
+
+### Users
+# @name get-users
+GET http://localhost:3000/users
+Authorization: Bearer {{token}}
+
+### Get user
+# @name get-user
+GET http://localhost:3000/users/1
+Authorization: Bearer {{token}}
+
+### Create user
+# @name create-user
+POST http://localhost:3000/users
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "firstname": "string",
+  "lastname": "string",
+  "email": "string",
+  "password": "string"
+}
+
+### Update user
+# @name update-user
+PATCH http://localhost:3000/users/2
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "firstname": "string",
+  "lastname": "string",
+  "email": "stringupdated",
+  "password": "string"
+}
+
+### Delete user
+# @name delete-user
+DELETE http://localhost:3000/users/2
+Authorization: Bearer {{token}}
+
+### Update role
+# @name update-role
+PATCH http://localhost:3000/users/2/role
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "role": "admin"
+}
