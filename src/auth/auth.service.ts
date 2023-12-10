@@ -22,9 +22,18 @@ export class AuthService {
             throw new UnauthorizedException();
         }
 
+        const userWithoutPassword = {
+            id: user.id,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email,
+            role: user.role,
+        };
+
         const payload = { email: user.email, sub: user.id };
         return {
             access_token: await this.jwtService.signAsync(payload),
+            user: userWithoutPassword
         };
     }
 }
