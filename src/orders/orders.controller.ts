@@ -6,12 +6,13 @@ import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { DeliveriesService } from 'src/deliveries/deliveries.service';
+import { ClientsService } from 'src/client/clients.service';
 
 @ApiBearerAuth()
 @Controller('orders')
 export class OrdersController {
 
-    constructor(private readonly ordersService: OrdersService, private readonly deliveriesService : DeliveriesService) {}
+    constructor(private readonly ordersService: OrdersService, private readonly deliveriesService : DeliveriesService, private readonly clientsService : ClientsService) {}
 
     /**
      * Get all orders
@@ -58,8 +59,15 @@ export class OrdersController {
      */
     @Roles(Role.Deliverer, Role.Admin)
     @Post()
-    async create(@Body() createOrderDto:CreateOrderDto) {
+    async create(@Body() createOrderDto : CreateOrderDto) {
         if(!createOrderDto) throw new BadRequestException();
+
+        const delivery = await this.deliveriesService.findOne(createOrderDto.deliveryId);
+        if(!delivery) throw new BadRequestException();
+
+        const client = await this.clientsService.findOne(createOrderDto.clientId);
+        if(!client) throw new BadRequestException();
+
         return await this.ordersService.create(createOrderDto);
     }
 
