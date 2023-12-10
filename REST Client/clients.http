@@ -1,0 +1,51 @@
+### Login
+# @name login
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+    "email": "admin@snappies.com",
+    "password": "password"
+}
+
+### Define token
+@token = {{login.response.body.access_token}}
+
+### Get all clients
+# @name get-clients
+GET http://localhost:3000/clients
+Authorization: Bearer {{token}}
+
+### Create client
+# @name create-client
+POST http://localhost:3000/clients
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Client 1",
+    "address": "Address 1",
+    "phone": "1234567890"
+}
+
+### Get client
+# @name get-client
+GET http://localhost:3000/clients/3
+Authorization: Bearer {{token}}
+
+### Update client
+# @name update-client
+PATCH http://localhost:3000/clients/3
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Client 1 updated",
+    "address": "Address 1",
+    "phone": "1234567890"
+}
+
+### Delete client
+# @name delete-client
+DELETE http://localhost:3000/clients/3
+Authorization: Bearer {{token}}

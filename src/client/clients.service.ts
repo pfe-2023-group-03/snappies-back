@@ -25,6 +25,13 @@ export class ClientsService {
         });
     }
 
+    // find one by name
+    findOneByName(name: string) {
+        return this.clientRepository.findOne({
+            where: { name },
+        });
+    }
+
     // create one
     create(createClientDto: CreateClientDto) {
         return this.clientRepository.save(createClientDto);
