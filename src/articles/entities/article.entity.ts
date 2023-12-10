@@ -8,7 +8,7 @@ export class Article {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({nullable: false})
+    @Column({nullable: false, unique: true})
     label: string;
 
     @OneToMany(() => OrderDetail, orderDetail => orderDetail.article)

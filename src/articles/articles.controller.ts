@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { BadRequestException, Body, ConflictException, Controller, Delete, Get, NotFoundException, Param, Patch, Post } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { Role } from 'src/enums/role.enum';
 import { Roles } from 'src/decorators/role.decorator';
@@ -12,40 +12,104 @@ export class ArticlesController {
 
     constructor(private readonly articlesService: ArticlesService) {}
 
-    // find all articles
+    /**
+     * Get all articles
+     * 
+     * @returns all articles and [] if no article
+     * - 200: OK
+     * - 401: Unauthorized
+     * - 403: Forbidden 
+     */
     @Roles(Role.Admin)
     @Get()
-    findAll() {
-        return this.articlesService.findAll();
+    async findAll() {
+        return await this.articlesService.findAll();
     }
 
-    // find one article by id
+    /**
+     * Get one article by id
+     * 
+     * @param id the article id 
+     * @returns the article
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     * - 404: Not Found
+     * - 200: OK
+     */
     @Roles(Role.Admin)
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.articlesService.findOne(+id);
+    async findOne(@Param('id') id: string) {
+        const article = await this.articlesService.findOne(+id);
+
+        if(!article) throw new NotFoundException();
+
+        return article;
     }
 
-    // create an article
+    /**
+     * Create a new article
+     * 
+     * @param createArticleDto the article to create 
+     * @returns the created article
+     * - 400: Bad Request
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     * - 201: Created
+     */
     @Roles(Role.Admin)
     @Post()
-    create(@Body() createArticleDto: CreateArticleDto) {
-        if(!createArticleDto) throw new BadRequestException('Article required');
-        return this.articlesService.create(createArticleDto);
+    async create(@Body() createArticleDto: CreateArticleDto) {
+        if(!createArticleDto) throw new BadRequestException();
+
+        const article = await this.articlesService.findOneByLabel(createArticleDto.label);
+        if(article) throw new ConflictException();
+
+        return await this.articlesService.create(createArticleDto);
     }
 
-    // update an article
+    /**
+     * Update an article
+     * 
+     * @param id the article id
+     * @param updateArticleDto the article to update
+     * @returns the updated article
+     * - 400: Bad Request
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     * - 404: Not Found
+     * - 409: Conflict
+     * - 200: OK
+     */
     @Roles(Role.Admin)
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateArticleDto: UpdateArticleDto) {
+    async update(@Param('id') id: string, @Body() updateArticleDto: UpdateArticleDto) {
         if(!updateArticleDto) throw new BadRequestException('Article required');
-        return this.articlesService.update(+id, updateArticleDto);
+
+        const article = await this.articlesService.findOne(+id);
+        if(!article) throw new NotFoundException();
+
+        const articleWithLabel = await this.articlesService.findOneByLabel(updateArticleDto.label);
+        if(articleWithLabel && articleWithLabel.id != article.id) throw new ConflictException();
+
+        return await this.articlesService.update(+id, updateArticleDto);
     }
 
-    // delete an article
+    /**
+     * Delete an article
+     * 
+     * @param id the article id
+     * @returns the deleted article
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     * - 404: Not Found
+     * - 200: OK
+     */
     @Roles(Role.Admin)
     @Delete(':id')
-    remove(@Param('id') id: string) {
+    async remove(@Param('id') id: string) {
+        const article = await this.articlesService.findOne(+id);
+        if(!article) throw new NotFoundException();
+
         return this.articlesService.remove(+id);
     }
 }

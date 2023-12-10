@@ -1,60 +1,134 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post  } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post  } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrdertDto } from './dto/update-order.dto';
-import { Public } from 'src/decorators/public.decorator';
 import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { DeliveriesService } from 'src/deliveries/deliveries.service';
+import { ClientsService } from 'src/client/clients.service';
 
 @ApiBearerAuth()
 @Controller('orders')
 export class OrdersController {
 
-    constructor(private readonly ordersService: OrdersService) {}
+    constructor(private readonly ordersService: OrdersService, private readonly deliveriesService : DeliveriesService, private readonly clientsService : ClientsService) {}
 
-    //find all orders
+    /**
+     * Get all orders
+     * 
+     * @returns all orders and [] if no order
+     * - 200: OK
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     */
     @Roles(Role.Deliverer, Role.Admin)
     @Get()
-    findAll() {
-        return this.ordersService.findAll();
+    async findAll() {
+        return await this.ordersService.findAll();
     }
 
-    // find one by id
+    /**
+     * Get one order by id
+     * 
+     * @param id the order id 
+     * @returns the order
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     * - 404: Not Found
+     * - 200: OK
+     */
     @Roles(Role.Deliverer, Role.Admin)
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.ordersService.findOne(+id);
+    async findOne(@Param('id') id: string) {
+        const order = await this.ordersService.findOne(+id);
+        if(!order) throw new NotFoundException();
+
+        return await this.ordersService.findOne(+id);
     }
 
-    // create order
+    /**
+     * Create a new order
+     * 
+     * @param createOrderDto the order to create 
+     * @returns the created order
+     * - 400: Bad Request
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     * - 201: Created
+     */
     @Roles(Role.Deliverer, Role.Admin)
     @Post()
-    create(@Body() createOrderDto:CreateOrderDto) {
-        if(!createOrderDto) throw new BadRequestException('Order required');
-        return this.ordersService.create(createOrderDto);
+    async create(@Body() createOrderDto : CreateOrderDto) {
+        if(!createOrderDto) throw new BadRequestException();
+
+        const delivery = await this.deliveriesService.findOne(createOrderDto.deliveryId);
+        if(!delivery) throw new BadRequestException();
+
+        const client = await this.clientsService.findOne(createOrderDto.clientId);
+        if(!client) throw new BadRequestException();
+
+        return await this.ordersService.create(createOrderDto);
     }
 
-    // update order (change state) by id
+    /**
+     * Update an order
+     * 
+     * @param id the order id
+     * @param updateOrdertDto the order to update
+     * @returns the updated order
+     * - 400: Bad Request
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     * - 404: Not Found
+     * - 200: OK
+     */
     @Roles(Role.Deliverer, Role.Admin)
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateOrdertDto: UpdateOrdertDto) {
-        if(!updateOrdertDto) throw new BadRequestException('Order required');
-        return this.ordersService.update(+id, updateOrdertDto);
+    async update(@Param('id') id: string, @Body() updateOrdertDto: UpdateOrdertDto) {
+        if(!updateOrdertDto) throw new BadRequestException();
+
+        const order = await this.ordersService.findOne(+id);
+        if(!order) throw new NotFoundException();
+
+        return await this.ordersService.update(+id, updateOrdertDto);
     }
 
-    // delete order by id
+    /**
+     * Delete an order
+     * 
+     * @param id the order id
+     * @returns the deleted result
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     * - 404: Not Found
+     * - 200: OK
+     */
     @Roles(Role.Admin)
     @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.ordersService.remove(+id);
+    async remove(@Param('id') id: string) {
+        const order = await this.ordersService.findOne(+id);
+        if(!order) throw new NotFoundException();
+
+        return await this.ordersService.remove(+id);
     }
 
-    // get orders of a delivery
+    /**
+     * Get all orders of a delivery
+     * 
+     * @param id the client id
+     * @returns all orders of the delivery
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     * - 200: OK
+     * - 404: Not Found
+     */
     @Roles(Role.Deliverer, Role.Admin)
     @Get('delivery/:id')
-    getOrders(@Param('id') id: string) {
-        return this.ordersService.getOrdersOfDelivery(+id);
-    }
+    async getOrders(@Param('id') id: string) {
+        const delivery = await this.deliveriesService.findOne(+id);
+        if(!delivery) throw new NotFoundException();
 
+        return await this.ordersService.getOrdersOfDelivery(+id);
+    }
 }
