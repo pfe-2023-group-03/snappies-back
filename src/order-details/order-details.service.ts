@@ -68,7 +68,7 @@ export class OrderDetailsService {
     getSumQuantityOfOrder(orderId: number){
         const result = this.orderDetailRepository
           .createQueryBuilder('orderDetail')
-          .select('SUM(orderDetail.quantity)', 'sum')
+          .select('SUM(orderDetail.defaultQuantity) + SUM(orderDetail.surplusQuantity)', 'sum')
           .where('orderDetail.orderId = :orderId', { orderId })
           .getRawOne();
     
