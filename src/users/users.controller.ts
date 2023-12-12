@@ -5,6 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
+import { UpdateRoleDto } from './dto/update-role.dto';
 
 @ApiBearerAuth()
 @Controller('users')
@@ -121,12 +122,12 @@ export class UsersController {
    */
   @Roles(Role.Admin)
   @Patch(':id/role')
-  async updateRole(@Param('id') id: string, @Body() role: Role) {
-    if(!role) throw new BadRequestException();
+  async updateRole(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
+    if(!updateRoleDto) throw new BadRequestException();
 
     const user = await this.usersService.findOne(+id);
     if(!user) throw new NotFoundException();
 
-    return this.usersService.updateRole(+id, role);
+    return this.usersService.updateRole(+id, updateRoleDto);
   }
 }
