@@ -7,6 +7,7 @@ import { User } from './entities/user.entity';
 
 import * as bcrypt from 'bcrypt';
 import { Role } from 'src/enums/role.enum';
+import { UpdateRoleDto } from './dto/update-role.dto';
 
 @Injectable()
 export class UsersService {
@@ -44,7 +45,7 @@ export class UsersService {
     });
   }
 
-  updateRole(id: number, role: Role) {
-    return this.usersRepository.update(id, { role });
+  updateRole(id: number, updateRoleDto: UpdateRoleDto) {
+    return this.usersRepository.update(id, updateRoleDto);
   }
 }
