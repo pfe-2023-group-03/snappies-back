@@ -4,6 +4,7 @@ import { OrderDetail } from './entites/orderDetail.entity';
 import { Repository, getManager } from 'typeorm';
 import { CreateOrderDetailDto } from './dto/create-orderDetail.dto';
 import { UpdateOrderDetailDto } from './dto/update-orderDetail.dto';
+import { UpdateQuantityDto } from './dto/update-quantity.dto';
 
 @Injectable()
 export class OrderDetailsService {
@@ -35,6 +36,14 @@ export class OrderDetailsService {
         return this.orderDetailRepository.update({ orderId, articleId }, updateOrderDetailDto);
     }
 
+    // update quantity of an article in an order
+    updateQuantity(orderId: number, articleId: number, updateQuantityDto:UpdateQuantityDto) {
+        if(updateQuantityDto.default){
+            return this.orderDetailRepository.update({ orderId, articleId }, { defaultQuantity: updateQuantityDto.quantity });
+        }
+        return this.orderDetailRepository.update({ orderId, articleId }, { surplusQuantity: updateQuantityDto.quantity });
+    }
+
     // delete orderDetail
     remove(orderId: number, articleId: number) {
         return this.orderDetailRepository.delete({ orderId, articleId });
@@ -50,7 +59,7 @@ export class OrderDetailsService {
     // get quantity of an article in an order
     getQuantityOfArticleOrder(orderId: number, articleId: number) {
         return this.orderDetailRepository.findOne({
-            select: ['quantity'],
+            select: ['defaultQuantity', 'surplusQuantity'],
             where: { orderId, articleId }
         });
     }
