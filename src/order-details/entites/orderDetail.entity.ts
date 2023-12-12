@@ -20,5 +20,8 @@ export class OrderDetail {
     article: Article;
 
     @Column({nullable: false})
-    quantity: number;
+    defaultQuantity: number;
+
+    @Column({nullable: false, default: 0})
+    surplusQuantity: number;
 }

@@ -16,5 +16,10 @@ export class CreateOrderDetailDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
-    quantity: number;
+    defaultQuantity: number;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    surplusQuantity: number;
 }

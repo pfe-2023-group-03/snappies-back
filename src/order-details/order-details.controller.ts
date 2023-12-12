@@ -7,6 +7,7 @@ import { Role } from 'src/enums/role.enum';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { OrdersService } from 'src/orders/orders.service';
 import { ArticlesService } from 'src/articles/articles.service';
+import { UpdateQuantityDto } from './dto/update-quantity.dto';
 
 @ApiBearerAuth()
 @Controller('order-details')
@@ -102,6 +103,36 @@ export class OrderDetailsController {
         if(!orderDetail) throw new NotFoundException();
 
         return await this.orderDetailsService.update(+orderId, +articleId, updateOrderDetailDto);
+    }
+
+    /**
+     * Update a orderDetail
+     * 
+     * @param orderId the order id
+     * @param articleId the article id
+     * @param updateOrderDetailDto the orderDetail to update
+     * @returns the updated orderDetail
+     * - 200: OK
+     * - 400: Bad Request
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     * - 404: Not Found
+     */
+    @Roles(Role.Admin)
+    @Patch('updateQuantity/:orderId/:articleId')
+    updateQuantity(@Param('orderId') orderId: string, @Param('articleId') articleId: string, @Body() updateQuantityDto:UpdateQuantityDto) {
+        if(!orderId || !articleId) throw new BadRequestException();
+
+        const order = this.ordersService.findOne(+orderId);
+        if(!order) throw new BadRequestException();
+
+        const article = this.articlesService.findOne(+articleId);
+        if(!article) throw new BadRequestException();
+
+        const orderDetail = this.orderDetailsService.findOne(+orderId, +articleId);
+        if(!orderDetail) throw new NotFoundException();
+
+        return this.orderDetailsService.updateQuantity(+orderId, +articleId, updateQuantityDto);
     }
 
     /**
