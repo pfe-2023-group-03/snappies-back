@@ -20,7 +20,7 @@ export class ArticlesController {
      * - 401: Unauthorized
      * - 403: Forbidden 
      */
-    @Roles(Role.Admin)
+    @Roles(Role.Deliverer, Role.Admin)
     @Get()
     async findAll() {
         return await this.articlesService.findAll();
@@ -36,7 +36,7 @@ export class ArticlesController {
      * - 404: Not Found
      * - 200: OK
      */
-    @Roles(Role.Admin)
+    @Roles(Role.Deliverer, Role.Admin)
     @Get(':id')
     async findOne(@Param('id') id: string) {
         const article = await this.articlesService.findOne(+id);
