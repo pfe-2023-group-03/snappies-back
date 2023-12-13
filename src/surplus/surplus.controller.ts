@@ -30,13 +30,13 @@ export class SurplusController {
   }
 
   @Roles(Role.Deliverer,Role.Admin)
-  @Patch(':id')
+  @Patch(':deliveryId/:articleId')
   update(@Param('deliveryId') deliveryId: number, @Param('articleId') articleId: number, @Body() updateSurplusDto: UpdateSurplusDto) {
     return this.surplusService.update(+deliveryId,+articleId, updateSurplusDto);
   }
 
   @Roles(Role.Deliverer,Role.Admin)
-  @Delete(':id')
+  @Delete(':deliveryId/:articleId')
   remove(@Param('deliveryId') deliveryId: number, @Param('articleId') articleId: number) {
     return this.surplusService.remove(+deliveryId,+articleId);
   }
