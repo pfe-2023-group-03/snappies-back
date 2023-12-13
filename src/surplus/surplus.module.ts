@@ -8,5 +8,6 @@ import { Surplus } from './entities/surplus.entity';
   controllers: [SurplusController],
   imports: [TypeOrmModule.forFeature([Surplus])],
   providers: [SurplusService],
+  exports: [SurplusService],
 })
 export class SurplusModule {}

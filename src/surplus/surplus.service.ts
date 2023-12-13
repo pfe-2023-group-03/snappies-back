@@ -36,11 +36,8 @@ export class SurplusService {
   }
 
   findByDelivery(deliveryId: number) {
-    const result = this.surplusRepository
-          .createQueryBuilder('surplus')
-          .select('*')
-          .where('surplus.deliveryId = :deliveryId', { deliveryId })
-          .getRawOne();
-        return result || 0;
+    return this.surplusRepository.find({
+      where: { deliveryId },
+    });
   }
 }
