@@ -74,7 +74,7 @@ export class DeliveriesController {
      * - 403: Forbidden
      * - 404: Not Found
      */
-    @Roles(Role.Admin)
+    @Roles(Role.Admin, Role.Deliverer)
     @Patch(':id')
     async update(@Param('id') id: string, @Body() updateDeliveryDto: UpdateDeliveryDto) {
         if(!updateDeliveryDto) throw new BadRequestException();
@@ -104,4 +104,9 @@ export class DeliveriesController {
         return await this.deliveriesService.remove(+id);
     }
 
+    @Roles(Role.Admin, Role.Deliverer)
+    @Get('users/:userId')
+    async findByUser(@Param('userId') userId: string) {
+        return await this.deliveriesService.findByUserId(+userId);
+    }
 }
