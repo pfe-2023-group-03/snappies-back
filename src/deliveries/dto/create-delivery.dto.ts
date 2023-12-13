@@ -12,10 +12,5 @@ export class CreateDeliveryDto {
     @IsNotEmpty()
     @IsString()
     title: string;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsNumber()
-    userId: number;
     
 }
