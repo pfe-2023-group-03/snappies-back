@@ -6,6 +6,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { Public } from 'src/decorators/public.decorator';
 
 @ApiBearerAuth()
 @Controller('users')
@@ -23,7 +24,8 @@ export class UsersController {
    * - 409: Conflict
    * - 201: Created
    */
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
+  @Public()
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     if(!createUserDto) throw new BadRequestException();

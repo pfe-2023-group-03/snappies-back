@@ -18,4 +18,9 @@ export class CreateSurplusDto {
     @IsNumber()
     quantity: number;
 
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    surplusQuantity: number;
+
 }

@@ -7,7 +7,6 @@ import { Role } from 'src/enums/role.enum';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { OrdersService } from 'src/orders/orders.service';
 import { ArticlesService } from 'src/articles/articles.service';
-import { UpdateQuantityDto } from './dto/update-quantity.dto';
 import { SurplusService } from 'src/surplus/surplus.service';
 
 @ApiBearerAuth()
@@ -81,8 +80,9 @@ export class OrderDetailsController {
         const orderId = response.orderId;
         const order = await this.ordersService.findOne(+orderId);
         const deliveryId = order.deliveryId;
-        const quantitySurplus = Math.ceil(response.defaultQuantity * 0.2);
-        await this.surplusService.create({deliveryId, articleId: createOrderDetailDto.articleId, quantity: quantitySurplus});
+        console.log(deliveryId);
+        const quantitySurplus = Math.ceil(response.quantity * 0.2);
+        await this.surplusService.create({deliveryId, articleId: createOrderDetailDto.articleId, quantity: quantitySurplus, surplusQuantity: 0});
         return response;
     }
 
@@ -116,7 +116,7 @@ export class OrderDetailsController {
         const response = await this.orderDetailsService.update(+orderId, +articleId, updateOrderDetailDto);
 
         const deliveryId = order.deliveryId;
-        const quantitySurplus = updateOrderDetailDto.defaultQuantity*0.2;
+        const quantitySurplus = Math.ceil(updateOrderDetailDto.quantity * 0.2);
         await this.surplusService.update(+deliveryId, +articleId, {quantity: quantitySurplus});
 
         return response;
@@ -137,7 +137,7 @@ export class OrderDetailsController {
      */
     @Roles(Role.Admin)
     @Patch('updateQuantity/:orderId/:articleId')
-    updateQuantity(@Param('orderId') orderId: string, @Param('articleId') articleId: string, @Body() updateQuantityDto:UpdateQuantityDto) {
+    updateQuantity(@Param('orderId') orderId: string, @Param('articleId') articleId: string, @Body() updateOrderDetailDto:UpdateOrderDetailDto) {
         if(!orderId || !articleId) throw new BadRequestException();
 
         const order = this.ordersService.findOne(+orderId);
@@ -149,7 +149,7 @@ export class OrderDetailsController {
         const orderDetail = this.orderDetailsService.findOne(+orderId, +articleId);
         if(!orderDetail) throw new NotFoundException();
 
-        return this.orderDetailsService.updateQuantity(+orderId, +articleId, updateQuantityDto);
+        return this.orderDetailsService.updateQuantity(+orderId, +articleId, updateOrderDetailDto);
     }
 
     /**

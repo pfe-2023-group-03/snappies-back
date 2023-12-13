@@ -15,6 +15,9 @@ export class Surplus {
     @Column({nullable: false})
     quantity: number;
 
+    @Column({nullable: false, default: 0})
+    surplusQuantity: number;
+
     @ManyToOne(() => Delivery, delivery => delivery.surplus)
     @JoinColumn({ name: 'deliveryId' })
     delivery: Delivery;
