@@ -11,7 +11,7 @@ export class Order {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ nullable: false })
+    @Column({ nullable: true })
     clientId: number;
 
     @ManyToOne(() => Client, client => client.orders, { onDelete: 'CASCADE' })
