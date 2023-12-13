@@ -9,7 +9,7 @@ export class Delivery {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ nullable: false })
+    @Column({ nullable: true })
     userId: number;
 
     @ManyToOne(() => User, user => user.deliveries, { onDelete: 'CASCADE' })
