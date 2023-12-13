@@ -41,4 +41,9 @@ export class DeliveriesService {
         return this.deliveryRepository.delete(id);
     }
 
+    findByUserId(userId: number){
+        return this.deliveryRepository.find({
+            where: { userId },
+        });
+    }
 }
