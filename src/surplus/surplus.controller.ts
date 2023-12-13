@@ -25,25 +25,25 @@ export class SurplusController {
 
   @Roles(Role.Deliverer,Role.Admin)
   @Get(':deliveryId/:articleId')
-  findOne(@Param('deliveryId') deliveryId: number, @Param('articleId') articleId: number) {
+  findOne(@Param('deliveryId') deliveryId: string, @Param('articleId') articleId: string) {
     return this.surplusService.findOne(+deliveryId,+articleId);
   }
 
   @Roles(Role.Deliverer,Role.Admin)
   @Patch(':deliveryId/:articleId')
-  update(@Param('deliveryId') deliveryId: number, @Param('articleId') articleId: number, @Body() updateSurplusDto: UpdateSurplusDto) {
+  update(@Param('deliveryId') deliveryId: string, @Param('articleId') articleId: string, @Body() updateSurplusDto: UpdateSurplusDto) {
     return this.surplusService.update(+deliveryId,+articleId, updateSurplusDto);
   }
 
   @Roles(Role.Deliverer,Role.Admin)
   @Delete(':deliveryId/:articleId')
-  remove(@Param('deliveryId') deliveryId: number, @Param('articleId') articleId: number) {
+  remove(@Param('deliveryId') deliveryId: string, @Param('articleId') articleId: string) {
     return this.surplusService.remove(+deliveryId,+articleId);
   }
 
   @Roles(Role.Deliverer, Role.Admin)
   @Post('delivery/:deliveryId')
-  findByDelivery(@Param('deliveryId') deliveryId: number) {
+  findByDelivery(@Param('deliveryId') deliveryId: string) {
     return this.surplusService.findByDelivery(+deliveryId);
   }
 }
