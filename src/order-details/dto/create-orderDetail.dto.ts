@@ -16,7 +16,7 @@ export class CreateOrderDetailDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
-    defaultQuantity: number;
+    quantity: number;
 
     @ApiProperty()
     @IsNotEmpty()

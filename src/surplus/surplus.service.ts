@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSurplusDto } from './dto/create-surplus.dto';
 import { UpdateSurplusDto } from './dto/update-surplus.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -27,7 +27,14 @@ export class SurplusService {
   });
   }
 
-  update(deliveryId: number, articleId: number, updateSurplusDto: UpdateSurplusDto) {
+  async update(deliveryId: number, articleId: number, updateSurplusDto: UpdateSurplusDto) {
+    const surplus = await this.surplusRepository.findOne({
+      where: { deliveryId, articleId },
+    });
+    
+    if(!surplus) throw new NotFoundException();
+    const quantity = surplus.quantity - updateSurplusDto.surplusQuantity;
+    if(quantity < 0) throw new BadRequestException('Surplus quantity cannot be negative');
     return this.surplusRepository.update({ deliveryId, articleId }, updateSurplusDto);
   }
 
