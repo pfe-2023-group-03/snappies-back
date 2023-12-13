@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 import { DeliveryState } from "src/enums/deliveryState.enum";
 import { User } from "src/users/entities/user.entity";
 import { Order } from "src/orders/entities/order.entity";
+import { Surplus } from "src/surplus/entities/surplus.entity";
 
 @Entity()
 export class Delivery {
@@ -24,4 +25,7 @@ export class Delivery {
 
     @OneToMany(() => Order, order => order.delivery)
     orders: Order[];
+
+    @OneToMany(() => Surplus, surplus => surplus.delivery)
+    surplus: Surplus[];
 }

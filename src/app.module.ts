@@ -14,6 +14,7 @@ import { OrdersModule } from './orders/orders.module';
 import { DeliveriesModule } from './deliveries/deliveries.module';
 import { ArticlesModule } from './articles/articles.module';
 import { OrderDetailsModule } from './order-details/order-details.module';
+import { SurplusModule } from './surplus/surplus.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { OrderDetailsModule } from './order-details/order-details.module';
     DeliveriesModule,
     ArticlesModule,
     OrderDetailsModule,
+    SurplusModule,
   ],
   controllers: [AppController],
   providers: [

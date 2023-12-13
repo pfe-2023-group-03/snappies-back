@@ -8,12 +8,17 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { OrdersService } from 'src/orders/orders.service';
 import { ArticlesService } from 'src/articles/articles.service';
 import { UpdateQuantityDto } from './dto/update-quantity.dto';
+import { SurplusService } from 'src/surplus/surplus.service';
 
 @ApiBearerAuth()
 @Controller('order-details')
 export class OrderDetailsController {
 
-    constructor(private orderDetailsService: OrderDetailsService, private readonly ordersService : OrdersService, private readonly articlesService : ArticlesService){}
+    constructor(
+        private orderDetailsService: OrderDetailsService, 
+        private readonly ordersService : OrdersService, 
+        private readonly articlesService : ArticlesService,
+        private readonly surplusService:SurplusService ){}
 
 
     /**
@@ -72,7 +77,13 @@ export class OrderDetailsController {
     @Roles(Role.Deliverer,Role.Admin)
     @Post()
     async create(@Body() createOrderDetailDto : CreateOrderDetailDto ) {
-        return await this.orderDetailsService.create(createOrderDetailDto);
+        const response = await this.orderDetailsService.create(createOrderDetailDto);
+        const orderId = response.orderId;
+        const order = await this.ordersService.findOne(+orderId);
+        const deliveryId = order.deliveryId;
+        const quantitySurplus = Math.ceil(response.defaultQuantity * 0.2);
+        await this.surplusService.create({deliveryId, articleId: createOrderDetailDto.articleId, quantity: quantitySurplus});
+        return response;
     }
 
     /**
@@ -102,7 +113,13 @@ export class OrderDetailsController {
         const orderDetail = await this.orderDetailsService.findOne(+orderId, +articleId);
         if(!orderDetail) throw new NotFoundException();
 
-        return await this.orderDetailsService.update(+orderId, +articleId, updateOrderDetailDto);
+        const response = await this.orderDetailsService.update(+orderId, +articleId, updateOrderDetailDto);
+
+        const deliveryId = order.deliveryId;
+        const quantitySurplus = updateOrderDetailDto.defaultQuantity*0.2;
+        await this.surplusService.update(+deliveryId, +articleId, {quantity: quantitySurplus});
+
+        return response;
     }
 
     /**
