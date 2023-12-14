@@ -1,0 +1,256 @@
+import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post } from '@nestjs/common';
+import { OrderDetailsService } from './order-details.service';
+import { CreateOrderDetailDto } from './dto/create-orderDetail.dto';
+import { UpdateOrderDetailDto } from './dto/update-orderDetail.dto';
+import { Roles } from 'src/decorators/role.decorator';
+import { Role } from 'src/enums/role.enum';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { OrdersService } from 'src/orders/orders.service';
+import { ArticlesService } from 'src/articles/articles.service';
+import { SurplusService } from 'src/surplus/surplus.service';
+
+@ApiBearerAuth()
+@Controller('order-details')
+export class OrderDetailsController {
+
+    constructor(
+        private orderDetailsService: OrderDetailsService, 
+        private readonly ordersService : OrdersService, 
+        private readonly articlesService : ArticlesService,
+        private readonly surplusService:SurplusService ){}
+
+
+    /**
+     * Get all orderDetails
+     * 
+     * @returns all orderDetails and [] if no orderDetail
+     * - 200: OK
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     */
+    @Roles(Role.Deliverer,Role.Admin)
+    @Get()
+    async findAll() {
+        return await this.orderDetailsService.findAll();
+    }
+
+    /**
+     * Get one orderDetail by articleId and orderId
+     * 
+     * @param orderId the order id
+     * @param articleId the article id
+     * @returns the orderDetail
+     * - 200: OK
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     * - 404: Not Found
+     * - 400: Bad Request
+     */
+    @Roles(Role.Deliverer,Role.Admin)
+    @Get(':orderId/:articleId')
+    async findOne(@Param('orderId') orderId: string, @Param('articleId') articleId: string) {
+        if(!orderId || !articleId) throw new BadRequestException('Order required or article required');
+        
+        const order = await this.ordersService.findOne(+orderId);
+        if(!order) throw new BadRequestException();
+
+        const article = await this.articlesService.findOne(+articleId);
+        if(!article) throw new BadRequestException();
+
+        const orderDetail = await this.orderDetailsService.findOne(+orderId, +articleId);
+        if(!orderDetail) throw new NotFoundException();
+
+        return orderDetail;
+    }
+
+    /**
+     * Create a new orderDetail
+     * 
+     * @param createOrderDetailDto the orderDetail to create 
+     * @returns the created orderDetail
+     * - 201: Created
+     * - 400: Bad Request
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     */
+    @Roles(Role.Deliverer,Role.Admin)
+    @Post()
+    async create(@Body() createOrderDetailDto : CreateOrderDetailDto ) {
+        console.log('Début');
+        const response = await this.orderDetailsService.create(createOrderDetailDto);
+        console.log('create', response);
+        const orderId = response.orderId;
+        const order = await this.ordersService.findOne(+orderId);
+        const deliveryId = order.deliveryId;
+        const quantitySurplus = Math.ceil(response.quantity * 0.2);
+        await this.surplusService.create({deliveryId, articleId: createOrderDetailDto.articleId, quantity: quantitySurplus, surplusQuantity: 0});
+        return response;
+    }
+
+    /**
+     * Update a orderDetail
+     * 
+     * @param orderId the order id
+     * @param articleId the article id
+     * @param updateOrderDetailDto the orderDetail to update
+     * @returns the updated orderDetail
+     * - 200: OK
+     * - 400: Bad Request
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     * - 404: Not Found
+     */
+    @Roles(Role.Deliverer,Role.Admin)
+    @Patch(':orderId/:articleId')
+    async update(@Param('orderId') orderId: string, @Param('articleId') articleId: string, @Body() updateOrderDetailDto : UpdateOrderDetailDto) {
+        if(!orderId || !articleId) throw new BadRequestException();
+
+        const order = await this.ordersService.findOne(+orderId);
+        if(!order) throw new BadRequestException();
+
+        const article = await this.articlesService.findOne(+articleId);
+        if(!article) throw new BadRequestException();
+
+        const orderDetail = await this.orderDetailsService.findOne(+orderId, +articleId);
+        if(!orderDetail) throw new NotFoundException();
+
+        const response = await this.orderDetailsService.update(+orderId, +articleId, updateOrderDetailDto);
+
+        const deliveryId = order.deliveryId;
+        const quantitySurplus = Math.ceil(updateOrderDetailDto.quantity * 0.2);
+        await this.surplusService.update(+deliveryId, +articleId, {quantity: quantitySurplus});
+
+        return response;
+    }
+
+    /**
+     * Update a orderDetail
+     * 
+     * @param orderId the order id
+     * @param articleId the article id
+     * @param updateOrderDetailDto the orderDetail to update
+     * @returns the updated orderDetail
+     * - 200: OK
+     * - 400: Bad Request
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     * - 404: Not Found
+     */
+    @Roles(Role.Deliverer,Role.Admin)
+    @Patch('updateQuantity/:orderId/:articleId')
+    updateQuantity(@Param('orderId') orderId: string, @Param('articleId') articleId: string, @Body() updateOrderDetailDto:UpdateOrderDetailDto) {
+        if(!orderId || !articleId) throw new BadRequestException();
+
+        const order = this.ordersService.findOne(+orderId);
+        if(!order) throw new BadRequestException();
+
+        const article = this.articlesService.findOne(+articleId);
+        if(!article) throw new BadRequestException();
+
+        const orderDetail = this.orderDetailsService.findOne(+orderId, +articleId);
+        if(!orderDetail) throw new NotFoundException();
+
+        return this.orderDetailsService.updateQuantity(+orderId, +articleId, updateOrderDetailDto);
+    }
+
+    /**
+     * Delete a orderDetail
+     * 
+     * @param orderId the order id
+     * @param articleId the article id
+     * @returns the deleted orderDetail
+     * - 200: OK
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     * - 404: Not Found
+     * - 400: Bad Request
+     */
+    @Roles(Role.Admin)
+    @Delete(':orderId/:articleId')
+    async remove(@Param('orderId') orderId: string, @Param('articleId') articleId: string) {
+        if(!orderId || !articleId) throw new BadRequestException();
+
+        const order = await this.ordersService.findOne(+orderId);
+        if(!order) throw new BadRequestException();
+
+        const article = await this.articlesService.findOne(+articleId);
+        if(!article) throw new BadRequestException();
+
+        const orderDetail = await this.orderDetailsService.findOne(+orderId, +articleId);
+        if(!orderDetail) throw new NotFoundException();
+
+        return await this.orderDetailsService.remove(+orderId, +articleId);
+    }
+
+    /**
+     * Get all orderDetails by orderId
+     * 
+     * @param orderId the order id
+     * @returns all orderDetails and [] if no orderDetail
+     * - 200: OK
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     * - 400: Bad Request
+     * - 404: Not Found
+     */
+    @Roles(Role.Deliverer,Role.Admin)
+    @Get(':orderId')
+    async findByOrder(@Param('orderId') orderId: string) {
+        if(!orderId) throw new BadRequestException();
+
+        const order = await this.ordersService.findOne(+orderId);
+        if(!order) throw new BadRequestException();
+
+        return await this.orderDetailsService.findByOrder(+orderId);
+    }
+
+    /**
+     * Get all orderDetails by articleId
+     * 
+     * @param orderId the order id
+     * @param articleId the article id
+     * @returns all orderDetails and [] if no orderDetail
+     * - 200: OK
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     * - 400: Bad Request
+     * - 404: Not Found
+     */
+    @Roles(Role.Deliverer,Role.Admin)
+    @Get('quantityOfArticleOrder/:orderId/:articleId')
+    async getQuantityOfArticleOrder(@Param('orderId') orderId: string, @Param('articleId') articleId: string) {
+        if(!orderId || !articleId) throw new BadRequestException();
+
+        const order = await this.ordersService.findOne(+orderId);
+        if(!order) throw new BadRequestException();
+
+        const article = await this.articlesService.findOne(+articleId);
+        if(!article) throw new BadRequestException();
+
+
+        return await this.orderDetailsService.getQuantityOfArticleOrder(+orderId, +articleId);
+    }
+
+    /**
+     * Get sum of quantity of order
+     * 
+     * @param orderId the order id
+     * @param articleId the article id
+     * @returns the sum of quantity of order
+     * - 200: OK
+     * - 401: Unauthorized
+     * - 403: Forbidden
+     * - 400: Bad Request
+     * - 404: Not Found
+     */
+    @Roles(Role.Deliverer,Role.Admin)
+    @Post('sumQuantityOfOrder/:orderId')
+    async getSumQuantityOfOrder2(@Param('orderId') orderId: string) {
+        if(!orderId) throw new BadRequestException();
+
+        const order = await this.ordersService.findOne(+orderId);
+        if(!order) throw new BadRequestException();
+
+        return await this.orderDetailsService.getSumQuantityOfOrder(+orderId);
+    }
+}

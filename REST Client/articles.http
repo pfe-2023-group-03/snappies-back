@@ -1,0 +1,47 @@
+### Login
+# @name login
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+    "email": "admin@snappies.com",
+    "password": "password"
+}
+
+### Define token variable
+@token = {{login.response.body.access_token}}
+
+### Get all articles
+# @name get-articles
+GET http://localhost:3000/articles
+Authorization: Bearer {{token}}
+
+### Create article
+# @name create-article
+POST http://localhost:3000/articles
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "label": "Article 1"
+}
+
+### Get article
+# @name get-article
+GET http://localhost:3000/articles/1
+Authorization: Bearer {{token}}
+
+### Update article
+# @name update-article
+PATCH http://localhost:3000/articles/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "label": "Article 1 updated"
+}
+
+### Delete article
+# @name delete-article
+DELETE http://localhost:3000/articles/1
+Authorization: Bearer {{token}}

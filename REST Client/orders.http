@@ -1,0 +1,54 @@
+### Login
+# @name login
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+    "email": "admin@snappies.com",
+    "password": "password"
+}
+
+### Define token
+@token = {{login.response.body.access_token}}
+
+### Get all orders
+# @name getOrders
+GET http://localhost:3000/orders
+Authorization: Bearer {{token}}
+
+### Get order by id
+# @name getOrderById
+GET http://localhost:3000/orders/1
+Authorization: Bearer {{token}}
+
+### Create order
+# @name createOrder
+POST http://localhost:3000/orders
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "clientId": 1,
+    "deliveryId": 1
+}
+
+### Update order
+# @name updateOrder
+PATCH http://localhost:3000/orders/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "clientId": 1,
+    "deliveryId": 1
+}
+
+### Delete order
+# @name deleteOrder
+DELETE http://localhost:3000/orders/1
+Authorization: Bearer {{token}}
+
+### Get all orders of a delivery
+# @name getOrdersOfDelivery
+GET http://localhost:3000/orders/delivery/1
+Authorization: Bearer {{token}}

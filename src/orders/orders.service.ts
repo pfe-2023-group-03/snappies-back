@@ -23,7 +23,7 @@ export class OrdersService {
     }
 
     // create order
-    async create(createOrderDto: CreateOrderDto){
+    create(createOrderDto: CreateOrderDto){
         return this.ordersRepository.save(createOrderDto);
     }
 
