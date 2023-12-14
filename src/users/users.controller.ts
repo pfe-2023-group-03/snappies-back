@@ -7,6 +7,7 @@ import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { Public } from 'src/decorators/public.decorator';
+import { UserWithoutPassword } from './dto/no-password-user.dto';
 
 @ApiBearerAuth()
 @Controller('users')
@@ -60,13 +61,20 @@ export class UsersController {
    * - 404: Not Found
    * - 200: OK
    */
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Deliverer)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const user = await this.usersService.findOne(+id);
     if(!user) throw new NotFoundException();
 
-    return user;
+    const newUser = new UserWithoutPassword();
+    newUser.id = user.id;
+    newUser.firstname = user.firstname;
+    newUser.lastname = user.lastname;
+    newUser.email = user.email;
+    newUser.role = user.role;
+
+    return newUser;
   }
 
   /**
