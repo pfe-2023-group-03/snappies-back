@@ -76,11 +76,12 @@ export class OrderDetailsController {
     @Roles(Role.Deliverer,Role.Admin)
     @Post()
     async create(@Body() createOrderDetailDto : CreateOrderDetailDto ) {
+        console.log('Début');
         const response = await this.orderDetailsService.create(createOrderDetailDto);
+        console.log('create', response);
         const orderId = response.orderId;
         const order = await this.ordersService.findOne(+orderId);
         const deliveryId = order.deliveryId;
-        console.log(deliveryId);
         const quantitySurplus = Math.ceil(response.quantity * 0.2);
         await this.surplusService.create({deliveryId, articleId: createOrderDetailDto.articleId, quantity: quantitySurplus, surplusQuantity: 0});
         return response;

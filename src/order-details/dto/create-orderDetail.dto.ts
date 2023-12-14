@@ -18,8 +18,5 @@ export class CreateOrderDetailDto {
     @IsNumber()
     quantity: number;
 
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsNumber()
-    surplusQuantity: number;
+
 }
