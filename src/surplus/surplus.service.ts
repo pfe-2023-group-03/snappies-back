@@ -31,10 +31,21 @@ export class SurplusService {
     const surplus = await this.surplusRepository.findOne({
       where: { deliveryId, articleId },
     });
+
+    let quantity = 0;
     
     if(!surplus) throw new NotFoundException();
-    const quantity = surplus.quantity - updateSurplusDto.surplusQuantity;
-    if(quantity < 0) throw new BadRequestException('Surplus quantity cannot be negative');
+    // updateSurplusDto.surplusQuantity = updateSurplusDto.surplusQuantity + surplus.surplusQuantity;
+    if(updateSurplusDto.surplusQuantity<0){
+      updateSurplusDto.surplusQuantity = updateSurplusDto.surplusQuantity + surplus.surplusQuantity;
+    }else{
+      quantity = (surplus.quantity - surplus.surplusQuantity) - updateSurplusDto.surplusQuantity;
+      console.log('quantity',quantity);
+      if(quantity < 0) throw new BadRequestException('Surplus quantity cannot be negative');
+      updateSurplusDto.surplusQuantity = surplus.quantity - quantity;
+    }
+    
+    // if(quantity < 0) throw new BadRequestException('Surplus quantity cannot be negative');
     return this.surplusRepository.update({ deliveryId, articleId }, updateSurplusDto);
   }
 
