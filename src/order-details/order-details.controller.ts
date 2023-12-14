@@ -136,7 +136,7 @@ export class OrderDetailsController {
      * - 403: Forbidden
      * - 404: Not Found
      */
-    @Roles(Role.Admin)
+    @Roles(Role.Deliverer,Role.Admin)
     @Patch('updateQuantity/:orderId/:articleId')
     updateQuantity(@Param('orderId') orderId: string, @Param('articleId') articleId: string, @Body() updateOrderDetailDto:UpdateOrderDetailDto) {
         if(!orderId || !articleId) throw new BadRequestException();
